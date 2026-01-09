@@ -1,3 +1,9 @@
+:::homework{id="A.6.1" title="Instalar Python 3"}
+
+Instala Python 3 en tu sistema (dentro de WSL si usas Windows) y verifica con `python3 --version`.
+
+:::
+
 # Instalación de Python
 
 Python es un lenguaje interpretado. Necesitamos instalar el "intérprete" para que nuestra computadora entienda el código `.py`.

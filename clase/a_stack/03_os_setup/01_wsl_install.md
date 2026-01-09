@@ -1,3 +1,9 @@
+:::homework{id="A.3.1" title="Instalación de Unix "}
+
+Instala WSL2 en tu computadora Windows siguiendo esta guía. Verifica que funciona ejecutando  `python3 --version` o `python --version` en la terminal de Ubuntu. Si tienes mac o linux o wsl2 ya instaldo no hay problema.
+
+:::
+
 # Guía de Sistema Operativo: WSL2 y Linux
 
 > **⚠️ Nota Importante:** Esta guía proporciona instrucciones generales. Cada computadora es diferente (marca, modelo, versión de BIOS/UEFI, componentes).

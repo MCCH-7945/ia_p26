@@ -176,6 +176,74 @@ def title_from_filename(name: str) -> str:
     return ' '.join(word.capitalize() for word in clean.split()) or name
 
 
+def validate_sequence(children: List[Dict], parent_path: str, verbose: bool = False) -> List[str]:
+    """
+    Validate that numbered items follow a logical sequence.
+    Returns list of warning messages.
+    """
+    warnings = []
+
+    # Extract numbered items
+    numbered = []
+    for child in children:
+        name = child['name']
+        match = re.match(r'^(\d+)[_-]', name)
+        if match:
+            num = int(match.group(1))
+            # Skip 00_ index files
+            if num > 0:
+                numbered.append((num, name))
+
+    if not numbered:
+        return warnings
+
+    # Sort by number
+    numbered.sort(key=lambda x: x[0])
+
+    # Check for gaps
+    nums = [n[0] for n in numbered]
+    expected_start = nums[0]  # First number sets the baseline
+
+    for i, (num, name) in enumerate(numbered):
+        if i == 0:
+            # First item - warn if not starting at 1
+            if num > 1:
+                missing = ', '.join(f'{n:02d}_' for n in range(1, num))
+                warnings.append(
+                    f"⚠️  {parent_path}: Sequence starts at {num:02d}_ (missing: {missing})"
+                )
+        else:
+            prev_num = numbered[i-1][0]
+            if num != prev_num + 1:
+                gap = num - prev_num - 1
+                missing = ', '.join(f'{n:02d}_' for n in range(prev_num + 1, num))
+                warnings.append(
+                    f"⚠️  {parent_path}: Gap in sequence - {prev_num:02d}_ → {num:02d}_ (missing: {missing})"
+                )
+
+    return warnings
+
+
+def validate_hierarchy(node: Dict, path: str = '', verbose: bool = False) -> List[str]:
+    """
+    Recursively validate hierarchy for sequence issues.
+    """
+    warnings = []
+
+    if 'children' in node and node['children']:
+        # Validate this level
+        current_path = path + '/' + node['name'] if path else node['name']
+        if node.get('type') in ['directory', 'root']:
+            warnings.extend(validate_sequence(node['children'], current_path, verbose))
+
+        # Recurse into children
+        for child in node['children']:
+            if child.get('type') == 'directory':
+                warnings.extend(validate_hierarchy(child, current_path, verbose))
+
+    return warnings
+
+
 def generate_hierarchy(
     content_dir: Path,
     metadata: Dict[str, Any],
@@ -222,6 +290,13 @@ def generate_hierarchy(
 
     # Sort top-level children
     tree['children'] = sorted(tree['children'], key=lambda x: x['order'])
+
+    # Validate hierarchy for sequence gaps (always print warnings)
+    warnings = validate_hierarchy(tree, verbose=verbose)
+    if warnings:
+        print("\n      Sequence warnings (file numbering issues):")
+        for warning in warnings:
+            print(f"      {warning}")
 
     return tree
 

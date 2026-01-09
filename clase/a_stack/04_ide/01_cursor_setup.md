@@ -1,3 +1,9 @@
+:::homework{id="A.4.1" title="Instalar Cursor"}
+
+Instala Cursor en tu sistema operativo y verifica que el comando `cursor .` funciona desde la terminal.
+
+:::
+
 # Instalación de Cursor
 
 Cursor es un fork de VSCode que integra modelos de lenguaje avanzados directamente en el editor.

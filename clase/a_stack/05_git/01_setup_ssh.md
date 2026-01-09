@@ -1,3 +1,9 @@
+:::homework{id="A.5.1" title="Configurar Git y SSH"}
+
+Configura Git con tu nombre y email, genera llaves SSH y agrégalas a tu cuenta de GitHub. Verifica con `ssh -T git@github.com`.
+
+:::
+
 # Git y GitHub: Tu Pasaporte al Mundo del Software
 
 ## Tarea: Configuración y Primer Pull Request

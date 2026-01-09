@@ -1,3 +1,9 @@
+:::homework{id="A.3.2" title="Crear cuenta de GitHub y solicitar Student Pack"}
+
+Crea tu cuenta de GitHub y solicita el GitHub Student Developer Pack siguiendo esta guía. Esto es requisito para las siguientes secciones del curso.
+
+:::
+
 # Guía para Estudiantes: Usar GitHub Codespaces y Ona (antes Gitpod) Solo con el Navegador
 
 Esta guía explica, paso a paso y en español, cómo tus estudiantes pueden crear cuentas y usar **GitHub Codespaces** y **Ona (antes Gitpod)** sin instalar nada en las laptops de la escuela.  

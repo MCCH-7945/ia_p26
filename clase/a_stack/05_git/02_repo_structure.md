@@ -1,3 +1,9 @@
+:::homework{id="A.5.2" title="Fork y Clone del repositorio"}
+
+Haz Fork del repositorio del curso, clónalo a tu máquina y configura el remote `upstream`. Crea tu carpeta personal en `estudiantes/tu_usuario/`.
+
+:::
+
 # Estructura del Curso y Tu Carpeta Personal
 
 Para este curso, trabajaremos de una manera muy específica para simular un entorno profesional y evitar conflictos de código. Este documento explica **dónde** puedes escribir y **dónde está prohibido**.

@@ -1,3 +1,9 @@
+:::homework{id="A.6.4" title="Tarea 02: Script Python y Certificación"}
+
+Completa el curso [Introduction to Python for Data Science](https://app.datacamp.com/learn/courses/intro-to-python-for-data-science), crea un script Python con clase/función/if-else, y envía todo mediante Pull Request.
+
+:::
+
 # Tarea Práctica: Python Básico
 
 Es hora de escribir código. Vas a crear tu propio script, ejecutarlo y subirlo a GitHub.

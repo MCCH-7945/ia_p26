@@ -105,6 +105,39 @@ module.exports = function(eleventyConfig) {
     return match ? parseInt(match[1], 10) : 999;
   });
 
+  // Get navigation number - uses actual file prefix numbers
+  // Examples: a_stack -> A, 02_llms -> A.2, 01_intro -> 1
+  eleventyConfig.addFilter("getNavNumber", function(name, prefix, index) {
+    // Check if name starts with letter prefix (a_, b_, c_, etc.) for appendices
+    const letterMatch = name.match(/^([a-z])_/i);
+    if (letterMatch) {
+      return letterMatch[1].toUpperCase();
+    }
+
+    // Check if name starts with numeric prefix (01_, 02_, etc.)
+    const numMatch = name.match(/^(\d+)[_-]/);
+    if (numMatch) {
+      const num = parseInt(numMatch[1], 10);
+      return prefix + num;
+    }
+
+    // Fallback to sequential index if no prefix found
+    return prefix + (index + 1);
+  });
+
+  // Clean navigation title - remove "Módulo X:", "Module X:", etc.
+  eleventyConfig.addFilter("cleanNavTitle", function(title) {
+    if (!title) return '';
+    let cleaned = title
+      .replace(/^\?\?\s*/, '')  // Remove ?? prefix
+      .replace(/^Módulo\s*\d+\s*[:\-]\s*/i, '')  // Remove "Módulo X:"
+      .replace(/^Module\s*\d+\s*[:\-]\s*/i, '')  // Remove "Module X:"
+      .replace(/^Capítulo\s*\d+\s*[:\-]\s*/i, '')  // Remove "Capítulo X:"
+      .replace(/^Chapter\s*\d+\s*[:\-]\s*/i, '')  // Remove "Chapter X:"
+      .trim();
+    return cleaned || title;
+  });
+
   // ============================================
   // Collections
   // ============================================
@@ -112,7 +145,15 @@ module.exports = function(eleventyConfig) {
   // All content pages
   eleventyConfig.addCollection("content", function(collectionApi) {
     return collectionApi.getFilteredByGlob("clase/**/*.md")
-      .filter(item => !item.inputPath.includes('b_libros'))
+      .filter(item => {
+        // Exclude non-content files
+        if (item.inputPath.includes('b_libros')) return false;
+        if (item.inputPath.includes('README_FLOW')) return false;
+        if (item.inputPath.includes('task-pages')) return false;
+        // Exclude work-in-progress (??_) directories
+        if (item.inputPath.includes('??_')) return false;
+        return true;
+      })
       .sort((a, b) => {
         const orderA = a.data.order || getOrderFromPath(a.inputPath);
         const orderB = b.data.order || getOrderFromPath(b.inputPath);
@@ -146,6 +187,34 @@ module.exports = function(eleventyConfig) {
 
   // Set default layout for all markdown files
   eleventyConfig.addGlobalData("layout", "layouts/base.njk");
+
+  // ============================================
+  // Transform - Fix .md links in output HTML
+  // ============================================
+
+  eleventyConfig.addTransform("fixMdLinks", function(content, outputPath) {
+    if (outputPath && outputPath.endsWith(".html")) {
+      // Transform href="...*.md" to href=".../" (remove .md, add trailing slash)
+      // Also fix relative paths: ./file.md -> ../file/
+      return content.replace(
+        /href="([^"]*?)\.md"/g,
+        (match, path) => {
+          // Don't transform external URLs
+          if (path.startsWith('http://') || path.startsWith('https://')) {
+            return match;
+          }
+          // Transform ./path to ../path (because we're in a subdirectory)
+          let newPath = path;
+          if (newPath.startsWith('./')) {
+            newPath = '../' + newPath.slice(2);
+          }
+          // Remove .md (already done by regex) and ensure trailing slash
+          return `href="${newPath}/"`;
+        }
+      );
+    }
+    return content;
+  });
 
   // ============================================
   // BrowserSync Configuration (for Docker)
@@ -196,18 +265,35 @@ function parseAttributes(str) {
 }
 
 /**
- * Get sort order from file path based on numeric prefix
+ * Get sort order from file path based on numeric/letter prefix
+ * Handles: 00_index, 01_intro, a_stack, b_libros, etc.
+ * Letter prefixes (appendices) sort after all numeric content
  */
 function getOrderFromPath(path) {
-  const parts = path.split('/');
+  const parts = path.split('/').filter(p => p && p !== '.' && p !== 'clase');
   let order = 0;
 
   parts.forEach((part, i) => {
-    const match = part.match(/^(\d+)/);
-    if (match) {
-      // Weight earlier path segments more heavily
-      order += parseInt(match[1], 10) * Math.pow(100, parts.length - i);
+    const weight = Math.pow(100, parts.length - i);
+
+    // Check for letter prefix (a_, b_, c_) - appendices come after numbered content
+    const letterMatch = part.match(/^([a-z])_/i);
+    if (letterMatch) {
+      // Letters start at 50 (after numbers 00-49) plus letter position
+      const letterValue = 50 + (letterMatch[1].toLowerCase().charCodeAt(0) - 97);
+      order += letterValue * weight;
+      return;
     }
+
+    // Check for numeric prefix (00_, 01_, 02_)
+    const numMatch = part.match(/^(\d+)/);
+    if (numMatch) {
+      order += parseInt(numMatch[1], 10) * weight;
+      return;
+    }
+
+    // No prefix - put at end (99)
+    order += 99 * weight;
   });
 
   return order;

@@ -1,3 +1,9 @@
+:::homework{id="A.6.2" title="Configurar extensión Python y venv"}
+
+Instala la extensión de Python en Cursor, crea un entorno virtual con `python3 -m venv venv` y verifica que el intérprete correcto está seleccionado.
+
+:::
+
 # Configuración de Python en Cursor/VSCode
 
 Para programar cómodamente, necesitamos que nuestro editor nos ayude con colores, autocompletado y detección de errores.

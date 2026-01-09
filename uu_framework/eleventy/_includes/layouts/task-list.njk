@@ -4,13 +4,24 @@ showSidebar: false
 ---
 
 {# Task list layout - for tareas.html, examenes.html, proyectos.html #}
+{# Uses taskType frontmatter to select which tasks to show: homework, exams, projects #}
 
 {{ content | safe }}
 
+{# Select task array based on taskType #}
+{% set taskList = [] %}
+{% if taskType == "homework" %}
+  {% set taskList = tasks.homework %}
+{% elif taskType == "exams" %}
+  {% set taskList = tasks.exams %}
+{% elif taskType == "projects" %}
+  {% set taskList = tasks.projects %}
+{% endif %}
+
 {# Task list #}
-{% if tasks and tasks.length > 0 %}
+{% if taskList and taskList.length > 0 %}
 <div class="space-y-4">
-  {% for task in tasks %}
+  {% for task in taskList %}
   <article class="p-4 rounded-lg border-l-4 bg-bg-secondary
     {% if task.type == 'homework' %}border-homework{% endif %}
     {% if task.type == 'exam' %}border-exam{% endif %}

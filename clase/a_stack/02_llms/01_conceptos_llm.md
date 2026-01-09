@@ -1,3 +1,9 @@
+:::homework{id="A.2.1" title="Curso: AI Assisted Coding for Developers"}
+
+Completa el curso [AI Assisted Coding for Developers](https://app.datacamp.com/learn/courses/ai-assisted-coding-for-developers). La evidencia se sube después en A.5.5 (módulo Git).
+
+:::
+
 # Large Language Models (LLMs)
 
 ## Tarea
@@ -40,8 +46,8 @@ graph LR
     C --> D{Transformer Layers};
     D --> E[Predicción de Probabilidades];
     E --> F[Siguiente Token];
-    style C fill:#f9f,stroke:#333
-    style D fill:#bbf,stroke:#333
+    style C fill:#2d1f3d,stroke:#ff79c6,stroke-width:2px,color:#ff79c6
+    style D fill:#1a1a2e,stroke:#8be9fd,stroke-width:2px,color:#8be9fd
 ```
 
 ## ¿Cómo funcionan? (Predicción de Siguiente Token)
@@ -52,12 +58,12 @@ El proceso básico es iterativo. El modelo recibe tu texto, predice el siguiente
 sequenceDiagram
     participant Usuario
     participant Modelo
-    Usuario->>Modelo: "El gato está en la..."
+    Usuario->>Modelo: "El gato está en la"
     Modelo->>Modelo: Analiza contexto ("gato", "está")
     Modelo->>Modelo: Calcula probabilidades
     Note right of Modelo: casa: 40%<br/>mesa: 30%<br/>caja: 20%
     Modelo->>Usuario: "casa"
-    Usuario->>Modelo: "El gato está en la casa..."
+    Usuario->>Modelo: "El gato está en la casa"
     Note over Usuario, Modelo: El ciclo se repite para la siguiente palabra
 ```
 

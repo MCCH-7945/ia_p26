@@ -84,6 +84,14 @@ def extract_components(content: str) -> List[Dict[str, Any]]:
     return components
 
 
+def extract_h1_title(content: str) -> Optional[str]:
+    """Extract first H1 header from markdown content."""
+    match = re.search(r'^#\s+(.+)$', content, re.MULTILINE)
+    if match:
+        return match.group(1).strip()
+    return None
+
+
 def title_from_filename(filepath: Path) -> str:
     """Generate title from filename if no frontmatter title."""
     name = filepath.stem
@@ -140,7 +148,7 @@ def extract_file_metadata(filepath: Path, verbose: bool = False) -> Dict[str, An
     # Build metadata
     metadata = {
         'path': str(filepath),
-        'title': frontmatter.get('title') or title_from_filename(filepath),
+        'title': frontmatter.get('title') or extract_h1_title(body) or title_from_filename(filepath),
         'type': frontmatter.get('type', 'lesson'),
         'order': frontmatter.get('order') or get_order_from_filename(filepath),
         'date': frontmatter.get('date'),

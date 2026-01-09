@@ -1,3 +1,9 @@
+:::homework{id="A.4.5" title="Tarea: Primer proyecto con Cursor"}
+
+Crea una carpeta `test_ide`, usa Composer para generar `hola_ide.md` con una biografía ficticia, y renderiza el markdown.
+
+:::
+
 # Tarea Práctica: Tu Primer Vuelo con Cursor
 
 Esta tarea es para que te familiarices con tu nuevo IDE. No hay que entregarla en GitHub todavía, es para ti.

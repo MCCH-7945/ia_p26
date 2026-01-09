@@ -119,10 +119,10 @@ def aggregate_all_tasks(
                 if verbose:
                     print(f"      Found project: {task['title']} in {chapter}")
 
-    # Sort by due date (None dates at end)
+    # Sort by file path (follows section numbering convention)
+    # e.g., a_stack/02_llms/... comes before a_stack/03_os_setup/...
     def sort_key(task):
-        due = task.get('due') or task.get('date') or '9999-99-99'
-        return due
+        return task.get('file', '')
 
     tasks['homework'].sort(key=sort_key)
     tasks['exams'].sort(key=sort_key)

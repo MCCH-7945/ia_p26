@@ -1,3 +1,9 @@
+:::homework{id="A.5.5" title="Tarea 01: Certificación GitHub + Entrega de evidencias"}
+
+Completa el curso [GitHub Concepts](https://app.datacamp.com/learn/courses/introduction-to-github-concepts) y sube las evidencias de AMBOS cursos (LLM de A.2.1 + GitHub) a tu carpeta personal mediante Pull Request.
+
+:::
+
 # Tarea Práctica: Configuración y Certificaciones
 
 Este ejercicio es tu "examen de manejo" para el curso. Vamos a poner en práctica todo lo aprendido sobre Git, GitHub, Flujo de trabajo y LLMs.
