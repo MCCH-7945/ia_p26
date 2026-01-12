@@ -72,6 +72,16 @@ module.exports = function(eleventyConfig) {
   // Copy images from content (explicitly from images directory only)
   eleventyConfig.addPassthroughCopy("images/**/*.{png,jpg,jpeg,gif,svg,webp}");
 
+  // Copy favicon files from static/ subdirectory to site root
+  // This keeps them organized but browsers can still find them at /favicon.ico
+  eleventyConfig.addPassthroughCopy({ "static/favicon.ico": "favicon.ico" });
+  eleventyConfig.addPassthroughCopy({ "static/favicon.svg": "favicon.svg" });
+  eleventyConfig.addPassthroughCopy({ "static/apple-touch-icon.png": "apple-touch-icon.png" });
+  eleventyConfig.addPassthroughCopy({ "static/favicon-16x16.png": "favicon-16x16.png" });
+  eleventyConfig.addPassthroughCopy({ "static/favicon-32x32.png": "favicon-32x32.png" });
+  eleventyConfig.addPassthroughCopy({ "static/android-chrome-192x192.png": "android-chrome-192x192.png" });
+  eleventyConfig.addPassthroughCopy({ "static/android-chrome-512x512.png": "android-chrome-512x512.png" });
+
   // Ignore output directory to prevent scanning it
   eleventyConfig.ignores.add("../_site/**");
 
