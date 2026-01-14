@@ -45,6 +45,8 @@ else if location = B then return Left
 - ❌ No tiene **memoria**
 - ❌ No puede **planear**
 
+![Simple Reflex Agent - Termostato y Vacuum](./images/simple_reflex_ejemplos.png)
+
 ---
 
 ## 2. Model-Based Reflex Agent
@@ -173,6 +175,8 @@ graph TD
 | **Critic** | Evalúa qué tan bien lo hace el agente |
 | **Learning Element** | Modifica performance element para mejorar |
 | **Problem Generator** | Sugiere acciones exploratorias |
+
+![Agente de Aprendizaje - Los 4 Componentes](./images/learning_agent_components.png)
 
 ### El trade-off fundamental
 
