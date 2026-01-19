@@ -1,6 +1,7 @@
 :::homework{id="A.4.5" title="Tarea: Primer proyecto con Cursor" due="2026-01-19" points="5"}
 
-Crea una carpeta `test_ide`, usa Composer para generar `hola_ide.md` con una biografía ficticia, y renderiza el markdown.
+Crea una carpeta `test_ide`, usa Composer para generar `hola_ide.md` con una biografía ficticia, y renderiza el markdown.  
+Sube evidencia a canvas de la tarea. Un screenshot del archivo renderizado, en cursor con tu chat de prompts.
 
 :::
 

@@ -27,14 +27,45 @@ graph TD
     D -->|Control| A
 ```
 
-Cada componente responde a una pregunta fundamental:
+Cada componente responde a una pregunta fundamental. Antes de ver la tabla resumen, definamos la notación usando **Pac-Man** como ejemplo unificador:
 
-| Componente | Pregunta | Formalización |
-|------------|----------|---------------|
-| **Performance** | ¿Qué significa éxito? | $U: S \to \mathbb{R}$ |
-| **Environment** | ¿En qué mundo opera? | Espacio $\mathcal{S}$, dinámica $T$ |
-| **Actuators** | ¿Qué puede hacer? | Espacio $\mathcal{A}$ |
-| **Sensors** | ¿Qué puede percibir? | $O: \mathcal{S} \to \mathcal{P}$ |
+### Notación Matemática
+
+| Símbolo | Nombre | Descripción | Ejemplo: Pac-Man |
+|---------|--------|-------------|------------------|
+| $\mathcal{S}$ | Espacio de estados | El conjunto de **todas las configuraciones posibles** del mundo. Es la "realidad completa" en cualquier momento. | Todas las combinaciones de: posición de Pac-Man, posición de cada fantasma, qué pellets quedan, power-ups activos, vidas restantes, puntuación actual |
+| $\mathcal{A}$ | Espacio de acciones | El conjunto de **todas las acciones que el agente puede ejecutar**. Define su "vocabulario de control". | $\{↑, ↓, ←, →, quedarse\}$ — los 5 movimientos posibles |
+| $\mathcal{P}$ | Espacio de percepts | El conjunto de **todos los percepts posibles**. Un *percept* es una observación individual — lo que los sensores entregan al agente en un instante. Es su "ventana al mundo": no el mundo real, sino la **representación** que el agente recibe. La *percept sequence* es la historia completa de percepts. | Si Pac-Man solo ve 3 casillas adelante: cada percept es una "foto" de esas 3 casillas. $\mathcal{P}$ = todas las combinaciones posibles de {vacío, muro, pellet, fantasma, power-up} en esas posiciones |
+| $U$ | Función de utilidad | Una función que asigna un **valor numérico** a estados o secuencias de estados. Define qué significa "éxito". | $U =$ puntuación final. Comer pellet = +10, comer fantasma = +200, perder vida = -500 |
+| $T$ | Función de transición | Describe **cómo el mundo cambia** cuando el agente actúa. Dado el estado actual y una acción, produce el siguiente estado. | Si Pac-Man está en (3,4) y ejecuta →, entonces se mueve a (4,4). Si hay fantasma ahí, pierde vida. |
+| $O$ | Función de observación | **Transforma el estado real en una percepción**. Es el "filtro" entre la realidad y lo que el agente ve. Puede perder información (observabilidad parcial) o agregar ruido (sensores imperfectos). | El estado real tiene toda la info del laberinto, pero $O$ solo devuelve las 3 casillas que Pac-Man puede "ver" desde su posición |
+| $\mathbb{R}$ | Números reales | El espacio de valores numéricos. Permite expresar "mejor" y "peor" cuantitativamente. | Puntuación: 0, 100, 2500, etc. |
+
+> **Percept vs Función de Observación**: El **percept** es lo que el agente recibe — una "foto" del mundo en un instante. La **función de observación** $O$ es el *proceso* que genera esa foto — cómo los sensores transforman la realidad en un percept. Piensa en $O$ como una cámara y cada percept como una foto que esa cámara toma. $\mathcal{P}$ es el álbum de todas las fotos posibles.
+
+#### Edge Cases: Cuando el Percept ≠ Realidad
+
+| Caso | Ejemplo | Estado Real $s$ | Percept $O(s)$ | Problema |
+|------|---------|-----------------|----------------|----------|
+| **Parcial** | Poker | Todas las cartas del mazo | Solo tus 2 cartas | Información oculta — no sabes qué tiene el rival |
+| **Ruidoso** | GPS | Posición exacta (3.4521, -5.1234) | (3.45 ± 0.01, -5.12 ± 0.01) | Error de medición — puedes estar en el carril equivocado |
+| **Aliasing** | Robot en pasillo | Pasillo A vs Pasillo B (idénticos) | "Paredes a ambos lados" | Mismo percept, estados distintos — ¿dónde estoy? |
+| **Retrasado** | Trading | Precio actual: \$105 | Último dato: \$100 (hace 2s) | Latencia — decides con info obsoleta |
+| **Alucinación** | Cámara + adversarial patch | Señal de STOP | "Límite 45 mph" | El sensor "ve" algo que no existe |
+| **Nulo** | Cámara en oscuridad | Obstáculo adelante | Imagen negra | Sin información útil — ¿qué haces? |
+
+**Implicación para diseño**: El agente debe razonar sobre la *incertidumbre* de su percept, no asumir que $O(s) = s$.
+
+### Resumen: Los 4 Componentes Formalizados
+
+Con esta notación, cada componente PEAS tiene una interpretación precisa:
+
+| Componente | Pregunta | Formalización | Lectura | Pac-Man |
+|------------|----------|---------------|---------|---------|
+| **Performance** | ¿Qué significa éxito? | $U: \mathcal{S} \to \mathbb{R}$ | "U toma un estado y devuelve qué tan bueno es" | Puntuación final del juego |
+| **Environment** | ¿En qué mundo opera? | $\mathcal{S}$; $T: \mathcal{S} \times \mathcal{A} \to \mathcal{S}$ | "S son los estados posibles, T dice cómo cambian con cada acción" | El laberinto con sus reglas de movimiento |
+| **Actuators** | ¿Qué puede hacer? | $\mathcal{A}$ | "El menú de acciones disponibles" | Controles: ↑↓←→ |
+| **Sensors** | ¿Qué puede percibir? | $O: \mathcal{S} \to \mathcal{P}$ | "O transforma el estado real en un percept" | Visión limitada → percept de 3 casillas |
 
 ![Framework PEAS - Los 4 Componentes]({{ '/02_agentes_&_ambientes/images/framework_peas.png' | url }})
 
@@ -135,6 +166,12 @@ El environment se define por:
 2. **Estado inicial** $s_0 \in \mathcal{S}$: Donde empieza el agente
 3. **Función de transición** $T: \mathcal{S} \times \mathcal{A} \to \mathcal{S}$ (determinista) o $T: \mathcal{S} \times \mathcal{A} \to \Delta(\mathcal{S})$ (estocástica)
 
+**¿Qué es $\Delta(\mathcal{S})$?** Es el **simplex de probabilidad** sobre $\mathcal{S}$ — el conjunto de todas las distribuciones de probabilidad válidas sobre los estados:
+
+$\Delta(S) := \\{p \mid p : S \to [0,1],\ \sum_{s \in S} p(s) = 1\\}$
+
+Es decir, $\Delta(\mathcal{S})$ contiene vectores de probabilidades que **suman 1**. Cuando $T$ mapea a $\Delta(\mathcal{S})$, significa que dado (estado, acción), obtienes una *distribución* sobre posibles siguientes estados, no un estado único.
+
 ### Transiciones Deterministas vs Estocásticas
 
 **Determinista**: El siguiente estado está completamente determinado:
@@ -169,7 +206,6 @@ $$r_t = \mathbb{1}[A\ limpio] + \mathbb{1}[B\ limpio]$$
 | Problema | Variables de Estado | $\|\mathcal{S}\|$ |
 |----------|---------------------|-------------------|
 | Vacuum World | 3 binarias | $2^3 = 8$ |
-| 8-puzzle | 9! permutaciones | $362,880$ |
 | Ajedrez | ~40 piezas × 64 casillas | $\sim 10^{43}$ |
 | Go | 361 posiciones × 3 estados | $\sim 10^{170}$ |
 | Taxi autónomo | Continuas | $\infty$ |
@@ -264,8 +300,8 @@ Donde $\mathcal{P}$ es el espacio de percepts.
 **Ejemplo de partial observability**:
 
 En póker, ves tus cartas pero no las del oponente:
-- Estado real: $(mis\_cartas, cartas\_oponente, cartas\_mesa)$
-- Percept: $(mis\_cartas, cartas\_mesa)$
+- Estado real: $(cartas_{mias}, cartas\_{oponente}, cartas\_{mesa})$
+- Percept: $(cartas_{mias}, cartas\_mesa)$
 
 Muchos estados reales mapean al mismo percept.
 
@@ -293,18 +329,42 @@ Esto significa que el agente **no conoce su posición exacta**, solo una distrib
 
 ### Información Contenida en Percepts
 
-Desde una perspectiva de **teoría de información**, los sensors determinan cuánta información sobre el estado real está disponible para el agente:
+**El problema fundamental del agente**: Está en algún estado $s \in \mathcal{S}$, pero no lo sabe directamente. Solo recibe un percept $p \in \mathcal{P}$. La pregunta es: **¿cuánto me ayuda el percept a saber en qué estado estoy?**
+
+Desde una perspectiva de **teoría de información**, podemos cuantificar esto. Definamos las variables:
+
+| Variable | Significado | Descripción |
+|----------|-------------|-------------|
+| $S$ | Variable aleatoria del estado | "¿En cuál de los estados posibles estoy?" |
+| $P$ | Variable aleatoria del percept | "¿Qué percept voy a recibir?" |
+| $H(S)$ | Entropía de $S$ | Incertidumbre *antes* de observar: "¿qué tan difícil es adivinar el estado?" |
+| $H(S \mid P)$ | Entropía condicional | Incertidumbre *después* de observar: "dado el percept, ¿qué tan difícil sigue siendo?" |
+| $I(S; P)$ | Información mutua | Reducción de incertidumbre: "¿cuánto me ayudó el percept?" |
+
+La relación clave es:
 
 $$I(S; P) = H(S) - H(S|P)$$
 
-Donde:
-- $H(S)$ = entropía del estado (incertidumbre total)
-- $H(S|P)$ = entropía condicional (incertidumbre después de observar)
-- $I(S;P)$ = información mutua (reducción de incertidumbre)
+**Intuición**: $I(S;P)$ mide cuánta incertidumbre sobre el estado *elimina* el percept.
 
-**Fully observable**: $I(S;P) = H(S)$ — el percept elimina toda incertidumbre.
+> ⚠️ **Nota**: No hemos definido formalmente **entropía** — lo haremos en capítulos posteriores. Por ahora, una interpretación intuitiva (simplificada, no rigurosa):
+> 
+> **Entropía $H(S)$** ≈ "cuántas preguntas de sí/no necesitas para identificar en qué estado estás". Si hay 8 estados equiprobables, necesitas ~3 preguntas. Si ya sabes el estado, necesitas 0 → entropía = 0.
+> 
+> **¿Por qué 3 preguntas para 8 estados?** Cada pregunta óptima divide los candidatos a la mitad:
+> - Pregunta 1: ¿Está en {1,2,3,4}? → quedan 4
+> - Pregunta 2: ¿Está en {1,2}? → quedan 2  
+> - Pregunta 3: ¿Es el 1? → queda 1 ✓
+> 
+> En general: $n$ estados equiprobables → $\log_2 n$ preguntas. Es búsqueda binaria.
+> 
+> **Información mutua $I(S;P)$** ≈ "cuántas preguntas te ahorra el percept para identificar el estado". Si antes necesitabas 10 preguntas y después de ver el percept solo necesitas 3, el percept te "regaló" ~7 preguntas de información.
+> 
+> Esta intuición de "preguntas" es útil pero incompleta — la definición formal involucra probabilidades y logaritmos que veremos después.
 
-**Partially observable**: $I(S;P) < H(S)$ — queda incertidumbre después de observar.
+**Fully observable**: $I(S;P) = H(S)$ — el percept elimina *toda* la incertidumbre. Después de observar, sabes exactamente en qué estado estás.
+
+**Partially observable**: $I(S;P) < H(S)$ — el percept ayuda, pero queda incertidumbre. Varios estados son consistentes con lo que observaste.
 
 ### Costos de Sensado
 
