@@ -26,6 +26,7 @@ La herramienta que usaremos es la **lógica proposicional** — el lenguaje form
 | 3.3 | [Inferencia](./03_inferencia.md) | ¿Cómo derivamos conclusiones? |
 | 3.4 | [Satisfacibilidad](./04_satisfacibilidad.md) | ¿Qué podemos computar? |
 | 3.5 | [Wumpus World](./05_wumpus_world.md) | ¿Cómo aplicamos todo junto? |
+| Proyecto | [Sistemas de Razonamiento](./a_proyecto/00_index.md) | ¿Cómo diseño un agente que razona? |
 
 ## Objetivos de Aprendizaje
 
