@@ -20,9 +20,12 @@ title: "Probabilidad: Razonamiento bajo Incertidumbre"
 | [08](08_bayes.md) | Teorema de Bayes | La joya de la corona: actualización de creencias |
 | [09](09_esperanza_momentos.md) | Esperanza y Momentos | Valores esperados, varianza, covarianza |
 
-## Tarea
+## Tareas
 
-| [10](10_tarea_probabilidad.md) | Tarea de Probabilidad | Ejercicios de probabilidad, conceptos, y álgebra booleana (20 pts, entrega: 4 feb) |
+| # | Descripción | Puntos | Entrega |
+|---|-------------|--------|---------|
+| [10a](10_tarea_probabilidad.md#tarea-curso-datacamp--foundations-of-probability-in-python) | Curso DataCamp: Foundations of Probability in Python | 20 | 4 feb |
+| [10b](10_tarea_probabilidad.md#tarea-ejercicios-de-probabilidad) | Ejercicios de Probabilidad, Conceptos y Álgebra Booleana | 20 | 4 feb |
 
 ## Lecturas
 

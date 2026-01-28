@@ -1,7 +1,40 @@
-:::homework{id="5.10" title="Ejercicios de Probabilidad" due="2026-02-04" points="20"}
+:::homework{id="5.10a" title="Curso DataCamp: Foundations of Probability" due="2026-02-04" points="20"}
+
+Completar el curso de DataCamp sobre fundamentos de probabilidad en Python. Subir evidencia a canvas
+
+:::
+
+# Tarea: Curso DataCamp — Foundations of Probability in Python
+
+## Información
+
+- **Fecha de entrega:** 4 de febrero de 2026
+- **Puntos:** 20
+- **Curso:** [Foundations of Probability in Python](https://app.datacamp.com/learn/courses/foundations-of-probability-in-python)
+
+## Instrucciones
+
+1. **Completar el curso** "Foundations of Probability in Python" en DataCamp
+2. **Entregar screenshot** del certificado de completación o de la pantalla que muestre 100% de progreso
+3. Subir a Canvas
+
+## ¿Por qué este curso?
+
+Este curso complementa lo que vimos en clase con práctica en código. Verás:
+- Cálculo de probabilidades con Python
+- Distribuciones de probabilidad (binomial, normal, etc.)
+- Simulaciones de Monte Carlo
+- Aplicaciones prácticas
+
+Es una buena forma de reforzar los conceptos mientras practicas programación.
+
+---
+---
+
+:::homework{id="5.10b" title="Ejercicios de Probabilidad" due="2026-02-04" points="20"}
 
 Ejercicios para reforzar conceptos de probabilidad, filosofía y álgebra booleana.
-
+Suvir tarea resulta a canvas
 :::
 
 # Tarea: Ejercicios de Probabilidad
