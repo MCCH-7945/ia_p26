@@ -149,6 +149,7 @@ celerybeat.pid
 .env
 .envrc
 .venv
+clase/23_reinforcement_learning/deep_rl/.venv/
 env/
 venv/
 ENV/
@@ -234,3 +235,6 @@ CLAUDE.md
 openspec/
 .claude/
 clase/exams
+
+.claude/commands
+.claude/skills
